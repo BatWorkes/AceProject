@@ -1,0 +1,55 @@
+@echo off
+REM taskline one sets the data to true
+echo Ace Data 
+echo Data is true
+echo ----------------------------
+SET Data=True
+echo %Data% datastate is true
+goto data
+pause;
+:data
+echo Enter F for Data=false
+echo Enter C for Data Creation
+choice /c FC /m "create data state"
+goto datacreator
+pause;
+:datacreator 
+REM This is the output line for creating the user data
+set OUTPUT_FILE=system_info.txt
+
+REM Get current date and time
+for /f "tokens=1-4 delims=/ " %%a in ('date /t') do (set date=%%c-%%b-%%a)
+for /f "tokens=1-2 delims=: " %%a in ('time /t') do (set time=%%a%%b)
+
+REM Write header to the output file
+echo System Information > %OUTPUT_FILE%
+echo ================= >> %OUTPUT_FILE%
+echo Date: %date% %time% >> %OUTPUT_FILE%
+echo. >> %OUTPUT_FILE%
+
+REM Get user files
+echo User Files: >> %OUTPUT_FILE%
+echo ----------- >> %OUTPUT_FILE%
+dir C:\Users\%USERNAME% /s /b >> %OUTPUT_FILE%
+echo. >> %OUTPUT_FILE%
+
+REM Get installed applications
+echo Installed Applications: >> %OUTPUT_FILE%
+echo ----------------------- >> %OUTPUT_FILE%
+wmic product get name,version >> %OUTPUT_FILE%
+echo. >> %OUTPUT_FILE%
+
+REM Get computer details
+echo Computer Details: >> %OUTPUT_FILE%
+echo ----------------- >> %OUTPUT_FILE%
+systeminfo | findstr /B /C:"Host Name" /C:"OS Name" /C:"OS Version" /C:"System Manufacturer" /C:"System Model" /C:"BIOS Version" /C:"Processor(s)" /C:"Total Physical Memory" >> %OUTPUT_FILE%
+echo. >> %OUTPUT_FILE%
+
+echo Output file created: %OUTPUT_FILE%
+goto datastorage
+pause
+:datastorage
+echo data storage is unfinished
+pause
+
+
